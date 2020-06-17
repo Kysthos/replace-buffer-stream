@@ -5,3 +5,29 @@ Probably more tests should be written. Not sure if works in all cases. Probably 
 ---
 
 {{>all-docs}}
+
+---
+
+## Examples
+
+```js
+const { streamReplace, bufferReplace } = require(".");
+const { pipeline, Readable } = require("stream");
+
+const buff = Buffer.from("some fancy text");
+const searchValue = Buffer.from("fancy"); // this could be a string as well
+const replaceValue = Buffer.from("regular"); // this could be a string as well
+
+const changedBuff = bufferReplace(buff, searchValue, replaceValue);
+console.log(changedBuff.toString()); // outputs: some regular text
+
+// this will output "some regular text" as well
+pipeline(
+  Readable.from(buff),
+  streamReplace(searchValue, replaceValue),
+  process.stdout,
+  (err) => {
+    if (err) console.error(err);
+  }
+);
+```
